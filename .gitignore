@@ -1,6 +1,38 @@
+# Compiled source #
+*.com
 *.class
+*.dll
+*.exe
+*.o
+*.so
 
 # Package Files #
 *.jar
 *.war
 *.ear
+
+# OS generated files #
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Eclipse files #
+.metadata/
+Servers/
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA files #
+.idea/
+*.iml
+
+# NetBeans files #
+nbproject/
+
+# Maven build directories #
+target/
+
+# Review Board #
+.reviewboardrc
