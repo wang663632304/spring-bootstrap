@@ -1,0 +1,7 @@
+#mail settings
+mail.hostname=localhost
+mail.port=15025
+mail.user=
+mail.password=
+
+mailhost.url=http://localhost:8080

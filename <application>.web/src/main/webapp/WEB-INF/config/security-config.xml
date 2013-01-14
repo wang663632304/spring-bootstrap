@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--<debug/>-->
+
+    <!-- Bypassing security for static resources -->
+    <http pattern="/resources/**" security="none"/>
+
+    <http use-expressions="true">
+
+        <form-login login-page="/signin"
+                    login-processing-url="/signin/authenticate"
+                    authentication-failure-url="/signin?error=1"/>
+        <logout logout-url="/signout"
+                delete-cookies="JSESSIONID"/>
+
+        <!-- Public -->
+        <intercept-url pattern="/" access="permitAll"/>
+
+        <!-- Authentication -->
+
+        <!-- Everything else -->
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
+
+        <session-management>
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>
+        </session-management>
+
+    </http>
+
+</beans:beans>

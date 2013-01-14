@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    persistence.xml is not used anywhere in project, it is only for IDE support features
+    entity classes are defined through packagesToScan spring entityManagerFactory bean
+-->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="<application-group-id>.persistence.jpa" transaction-type="RESOURCE_LOCAL" >
+    </persistence-unit>
+
+</persistence>

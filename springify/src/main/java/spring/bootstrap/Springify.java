@@ -30,7 +30,7 @@ public class Springify {
                 console.readLine(" > 3. So, based on the application name and the domain zone is the following maven groupId correct: '%s' ?: [Y/n]: ", applicationGroupId);
 
         if (correctApplicationGroupId.equalsIgnoreCase("n") || correctApplicationGroupId.equalsIgnoreCase("no")) {
-            applicationGroupId = console.readLine("\t > 3.1. Enter your maven groupId: ");
+            applicationGroupId = console.readLine("\t > 3.1. Enter your maven groupId (must be in <domain zone>.<application name> format, like org.junit, for example): ");
         }
 
         console.printf("\nPlease wait, while applying your configuration...\n");
@@ -40,12 +40,10 @@ public class Springify {
         apply(substitutionMap);
 
         console.printf("\nThank you for using spring-bootstrap! Wish you the best with your new Great project! :)\n\n");
-
-        // TODO: print quote from Robin Sharma
     }
 
     private void apply(SubstitutionMap substitutionMap) throws IOException {
-        File projectDir = new File("/home/alex/trash/spring-bootstrap");
+        File projectDir = new File(".");
         File[] modules = projectDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {

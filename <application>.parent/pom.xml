@@ -1,21 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId><application></groupId>
-    <artifactId><application>.parent</artifactId>
+    <groupId><application-group-id></groupId>
+    <artifactId><application-group-id>.parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name><application>.parent</name>
+    <name><application-group-id>.parent</name>
 
     <modules>
-        <module>../<application>.domain</module>
-        <module>../<application>.persistence</module>        
-        <module>../<application>.service</module>        
-        <module>../<application>.web</module>
+        <module>../<application-group-id>.domain</module>
+        <module>../<application-group-id>.persistence</module>
+        <module>../<application-group-id>.service</module>
+        <module>../<application-group-id>.web</module>
     </modules>
 
     <properties>
-        <spring.framework.version>3.1.2.RELEASE</spring.framework.version>
+        <spring.framework.version>3.2.0.RELEASE</spring.framework.version>
         <spring.security.version>3.1.3.RELEASE</spring.security.version>
         <slf4j.version>1.6.4</slf4j.version>
         <hibernate.version>4.1.7.Final</hibernate.version>
@@ -23,7 +23,6 @@
         <java.version>1.6</java.version>
         
         <powermock.version>1.4.11</powermock.version>
-        <cglib.version>2.2.3</cglib.version>        
     </properties>
 
     <scm>
@@ -31,13 +30,6 @@
     </scm>
 
     <dependencies>
-
-        <!-- CGLIB2 for Spring AOP -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>${cglib.version}</version>
-        </dependency>
 
         <!-- Spring Dependencies -->
         <dependency>
@@ -78,18 +70,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring.framework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>${spring.framework.version}</version>
-        </dependency>
-
-        <!-- Spring Aspects -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId>
             <version>${spring.framework.version}</version>
         </dependency>
 
@@ -263,8 +243,8 @@
             <url>http://repo.springsource.org/release</url>
         </repository>
         <repository>
-            <id><application-repo>-repo</id>
-            <url>file://${basedir}/../<application>.parent/repo</url>
+            <id><application-name-lowercase>-repo</id>
+            <url>file://${basedir}/../<application-group-id>.parent/repo</url>
         </repository>
     </repositories>
 

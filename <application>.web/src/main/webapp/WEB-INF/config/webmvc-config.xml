@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <context:property-placeholder location="classpath:/META-INF/web.properties" system-properties-mode="NEVER"/>
+
+    <!-- Scans the classpath of this application for @Components to deploy as beans -->
+    <context:component-scan base-package="<application-group-id>.web.controllers"/>
+
+    <!-- Configures the @Controller programming model -->
+    <mvc:annotation-driven conversion-service="conversionService"
+                           ignoreDefaultModelOnRedirect="true"> <!-- The default setting is false but new applications should consider setting it to true. -->
+        <mvc:argument-resolvers>
+
+            <!-- See http://static.springsource.org/spring-data/data-jpa/docs/current/reference/html/ 1.5.2. Web pagination -->
+            <!-- The following request parameters are expected to create Pageable argument:
+                page.page: The page you want to retrieve
+                page.size: The size of the page you want to retrieve
+                page.sort: The property that should be sorted by
+                page.sort.dir: The direction that should be used for sorting
+            -->
+            <bean class="org.springframework.data.web.PageableArgumentResolver">
+                <property name="fallbackPagable">
+                    <bean class="org.springframework.data.domain.PageRequest"
+                          c:page="1"
+                          c:size="${pagination.default.size}"/>
+                </property>
+                <property name="prefix" value=""/>
+                <property name="separator" value=""/>
+            </bean>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
+    <bean id="conversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+
+        <property name="formatters">
+            <set>
+                <!-- Specify your own formatters here -->
+            </set>
+        </property>
+    </bean>
+
+    <!-- Fortunately Spring provides means to register custom converting components that allow conversion between
+    a String value to an arbitrary type.
+    See http://static.springsource.org/spring-data/data-jpa/docs/current/reference/html/ 1.5.1. Domain class web binding for Spring MVC
+    -->
+    <!-- Try it, and see whether it is useful to use -->
+    <bean class="org.springframework.data.repository.support.DomainClassConverter" depends-on="conversionService">
+        <constructor-arg ref="conversionService"/>
+    </bean>
+
+    <!-- Configures Handler Interceptors -->
+    <mvc:interceptors>
+        <!-- Changes the locale when a 'lang' request parameter is sent; e.g. /?lang=de -->
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="lang"/>
+        </bean>
+
+        <!-- Order is important here! OpenEntityManagerInViewInterceptor should come before AccountExposingHandlerInterceptor
+            in order be able to attache account into the persistence context -->
+        <bean class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">
+            <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        </bean>
+    </mvc:interceptors>
+
+    <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources/ directory -->
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/>
+    </bean>
+
+    <!-- Configures the Tiles layout system -->
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/layouts/tiles.xml</value>
+                <value>/WEB-INF/views/**/*tiles.xml</value>
+            </list>
+        </property>
+        <property name="checkRefresh" value="true"/>
+    </bean>
+
+    <!-- i18n and l10n -->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="basenames">
+            <list>
+                <!-- Only for binding, type mismatch and reject value errors
+                     For JSR 303 validation ValidationMessages.properties is used -->
+                <value>/WEB-INF/messages/validation</value>
+                <value>/WEB-INF/messages/web</value>
+            </list>
+        </property>
+        <property name="cacheSeconds" value="0"/>
+    </bean>
+
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="en"/>
+    </bean>
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- one of the properties available; the maximum file size in bytes -->
+        <property name="maxUploadSize" value="512000"/> <!-- 500kb -->
+    </bean>
+
+
+    <!-- Actually this validator bean is not required, Validator injection works find without it.
+        Just to satisfy the IDE ) -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+    </bean>
+
+</beans>

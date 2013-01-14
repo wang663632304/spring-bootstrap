@@ -1,0 +1,8 @@
+Order for SQL scripts execution to properly setup development database:
+1. database.sql
+2. schema.sql
+3. functions-and-triggers.sql
+4. data.sql
+
+Note: 
+ - sample-data.sql is used only for development to fill the database with sample data to test the application
